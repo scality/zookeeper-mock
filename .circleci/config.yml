@@ -1,0 +1,17 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/mern-starter # directory where steps will run
+    docker:
+      - image: circleci/node:8-jessie
+    steps:
+      - checkout
+      - run:
+          name: install-npm
+          command: npm install
+      - run:
+          name: lint
+          command: npm run --silent lint -- --max-warnings 0
+      - run:
+          name: test
+          command: npm test

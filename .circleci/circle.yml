@@ -1,8 +1,0 @@
-machine:
-  node:
-    version: 6.9.5
-
-test:
-  override:
-    - npm run --silent lint -- --max-warnings 0
-    - npm run test
