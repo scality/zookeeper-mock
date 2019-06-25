@@ -1,0 +1,36 @@
+{
+  "name": "zookeeper-mock",
+  "version": "1.0.0",
+  "description": "NodeJS Zookeeper mock",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/unit",
+    "lint": "eslint $(git ls-files '*.js')",
+    "lint_md": "mdlint $(git ls-files '*.md')"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vrancurel/zookeeper-mock.git"
+  },
+  "keywords": [
+    "zookeeper",
+    "mock",
+    "test"
+  ],
+  "author": "Vianney Rancurel",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/vrancurel/zookeeper-mock/issues"
+  },
+  "homepage": "https://github.com/vrancurel/zookeeper-mock#readme",
+  "dependencies": {
+    "node-zookeeper-client": "^0.2.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.3.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-scality": "scality/Guidelines#1d6f287b",
+    "eslint-plugin-import": "^2.14.0",
+    "mocha": "^6.1.4"
+  }
+}
