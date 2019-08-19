@@ -4,7 +4,7 @@ const zookeeper = require('node-zookeeper-client');
 const ZookeeperMock = require('../../lib/ZookeeperMock');
 
 describe('zookeeper mock', () => {
-    it.only('basic create/get/set/getchildren', done => {
+    it('basic create/get/set/getchildren', done => {
         const zkc = new ZookeeperMock();
         const subPath = '/foo/bar';
         const path1 = `${subPath}/qux`;
@@ -43,7 +43,7 @@ describe('zookeeper mock', () => {
         });
     });
 
-    it.only('eexist', done => {
+    it('eexist', done => {
         const zkc = new ZookeeperMock();
         const subPath = '/foo/bar';
         const path1 = `${subPath}/qux`;
@@ -61,12 +61,21 @@ describe('zookeeper mock', () => {
         });
     });
 
-    it.only('zeropad', () => {
+    it('getData on non-existent path', done => {
+        const zkc = new ZookeeperMock();
+        const path1 = '/foo';
+        zkc.getData(path1, err => {
+            assert(err && err.name === 'NO_NODE');
+            return done();
+        });
+    });
+
+    it('zeropad', () => {
         const zkc = new ZookeeperMock();
         assert.deepEqual(zkc.zeroPad('/foo', 42, 10), '/foo0000000042');
     });
 
-    it.only('sequential', done => {
+    it('sequential', done => {
         const zkc = new ZookeeperMock();
         const subPath = '/foo';
         const path1 = `${subPath}/xxx`;
@@ -93,7 +102,7 @@ describe('zookeeper mock', () => {
                    });
     });
 
-    it.only('barrier', done => {
+    it('barrier', done => {
         // the goal here is to implement a barrier allowing processes
         // to continue after reaching a quota
         const zkc = new ZookeeperMock();
@@ -136,7 +145,7 @@ describe('zookeeper mock', () => {
         });
     });
 
-    it.only('barrier_signal', done => {
+    it('barrier_signal', done => {
         // the goal here is to implement a barrier with a SEQUENCE
         // to wake up exactly one process
         const zkc = new ZookeeperMock();
