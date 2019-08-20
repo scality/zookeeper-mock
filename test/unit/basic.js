@@ -70,6 +70,16 @@ describe('zookeeper mock', () => {
         });
     });
 
+    it('mkdirp', done => {
+        const zkc = new ZookeeperMock();
+        const path1 = '/foo/bar/qux/quz';
+        const data = new Buffer('xxx');
+        zkc.mkdirp(path1, data, err => {
+            assert.ifError(err);
+            return done();
+        });
+    });
+
     it('zeropad', () => {
         const zkc = new ZookeeperMock();
         assert.deepEqual(zkc.zeroPad('/foo', 42, 10), '/foo0000000042');
