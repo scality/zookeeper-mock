@@ -272,4 +272,26 @@ describe('zookeeper mock', () => {
             });
         });
     });
+
+    it('watcher - NODE_DATA_CHANGED', done => {
+        const zkc = new ZookeeperMock();
+        const topLevelPath = '/a1';
+        const path1 = `${topLevelPath}/a1`;
+        const data1 = new Buffer('42');
+        const data2 = new Buffer('43');
+        zkc.create(path1, data1, {}, {}, err => {
+            assert.ifError(err);
+            zkc.getData(path1, event => {
+                assert(event);
+                assert.strictEqual(event.type,
+                    zookeeper.Event.NODE_DATA_CHANGED);
+            }, err => {
+                assert.ifError(err);
+                zkc.setData(path1, data2, err => {
+                    assert.ifError(err);
+                    return done();
+                });
+            });
+        });
+    });
 });
