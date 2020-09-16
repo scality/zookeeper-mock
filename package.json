@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vrancurel/zookeeper-mock.git"
+    "url": "git+https://github.com/scality/zookeeper-mock.git"
   },
   "keywords": [
     "zookeeper",
@@ -20,9 +20,9 @@
   "author": "Vianney Rancurel",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/vrancurel/zookeeper-mock/issues"
+    "url": "https://github.com/scality/zookeeper-mock/issues"
   },
-  "homepage": "https://github.com/vrancurel/zookeeper-mock#readme",
+  "homepage": "https://github.com/scality/zookeeper-mock#readme",
   "dependencies": {
     "node-zookeeper-client": "^0.2.2"
   },
