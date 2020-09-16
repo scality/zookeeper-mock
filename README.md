@@ -1,5 +1,5 @@
 # zookeeper-mock
-[![CircleCI](https://circleci.com/gh/vrancurel/zookeeper-mock.svg?style=svg)](https://circleci.com/gh/vrancurel/zookeeper-mock)
+[![CircleCI](https://circleci.com/gh/scality/zookeeper-mock.svg?style=svg)](https://circleci.com/gh/scality/zookeeper-mock)
 
 This module can be used as a Zookeeper mock to simulate race
 conditions in programs.
