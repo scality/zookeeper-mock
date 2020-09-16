@@ -29,7 +29,7 @@ describe('zookeeper mock', () => {
                             assert.ifError(err);
                             zkc.getChildren(topLevelPath, (err, children) => {
                                 assert.deepStrictEqual(children,
-                                                       ['qux', 'quxx']);
+                                    ['qux', 'quxx']);
                                 return done();
                             });
                         });
@@ -101,23 +101,23 @@ describe('zookeeper mock', () => {
         const data1 = new Buffer('42');
         const data2 = new Buffer('43');
         zkc.create(path1, data1, {},
-                   zookeeper.CreateMode.PERSISTENT_SEQUENTIAL,
-                   err => {
-                       assert.ifError(err);
-                       zkc.create(path2, data2, {},
-                                  zookeeper.CreateMode.PERSISTENT_SEQUENTIAL,
-                                  err => {
-                                      assert.ifError(err);
-                                      zkc.getChildren(topLevelPath,
-                                  (err, children) => {
-                                      assert.ifError(err);
-                                      assert.deepStrictEqual(children,
-                                                             ['xxx0000000000',
-                                                              'xxx0000000001']);
-                                      return done();
-                                  });
-                                  });
-                   });
+            zookeeper.CreateMode.PERSISTENT_SEQUENTIAL,
+            err => {
+                assert.ifError(err);
+                zkc.create(path2, data2, {},
+                    zookeeper.CreateMode.PERSISTENT_SEQUENTIAL,
+                    err => {
+                        assert.ifError(err);
+                        zkc.getChildren(topLevelPath,
+                            (err, children) => {
+                                assert.ifError(err);
+                                assert.deepStrictEqual(children,
+                                    ['xxx0000000000',
+                                        'xxx0000000001']);
+                                return done();
+                            });
+                    });
+            });
     });
 
     it('barrier_sequence', done => {
@@ -139,27 +139,27 @@ describe('zookeeper mock', () => {
                 // simulate a race
                 process.nextTick(() => {
                     zkc.create(path2, data2, {},
-                               zookeeper.CreateMode.PERSISTENT_SEQUENTIAL,
-                               (err, path) => {
-                                   assert.ifError(err);
-                                   if (path === `${path1}0000000002`) {
-                                       // th1 firing
-                                       return done();
-                                   }
-                                   return undefined;
-                               });
+                        zookeeper.CreateMode.PERSISTENT_SEQUENTIAL,
+                        (err, path) => {
+                            assert.ifError(err);
+                            if (path === `${path1}0000000002`) {
+                                // th1 firing
+                                return done();
+                            }
+                            return undefined;
+                        });
                 });
                 process.nextTick(() => {
                     zkc.create(path3, data3, {},
-                               zookeeper.CreateMode.PERSISTENT_SEQUENTIAL,
-                               (err, path) => {
-                                   assert.ifError(err);
-                                   if (path === `${path1}0000000002`) {
-                                       // th2 firing
-                                       return done();
-                                   }
-                                   return undefined;
-                               });
+                        zookeeper.CreateMode.PERSISTENT_SEQUENTIAL,
+                        (err, path) => {
+                            assert.ifError(err);
+                            if (path === `${path1}0000000002`) {
+                                // th2 firing
+                                return done();
+                            }
+                            return undefined;
+                        });
                 });
             });
     });
@@ -182,16 +182,16 @@ describe('zookeeper mock', () => {
                     event => {
                         assert(
                             event.type ===
-                                zookeeper.Event.NODE_CHILDREN_CHANGED);
+                            zookeeper.Event.NODE_CHILDREN_CHANGED);
                         eventCount++;
                         if (eventCount === 2) {
                             zkc2.getChildren(
                                 topLevelPath,
-                                        (err, children) => {
-                                            assert.ifError(err);
-                                            assert(children.length === 0);
-                                            return done();
-                                        });
+                                (err, children) => {
+                                    assert.ifError(err);
+                                    assert(children.length === 0);
+                                    return done();
+                                });
                         }
                     },
                     (err, children) => {
@@ -206,5 +206,70 @@ describe('zookeeper mock', () => {
                             });
                     });
             });
+    });
+
+    it('exists', done => {
+        const zkc = new ZookeeperMock();
+        const path1 = '/a1';
+        const path2 = '/a2';
+        const data1 = new Buffer('42');
+        zkc.create(path1, data1, {}, {}, err => {
+            assert.ifError(err);
+            zkc.remove(path1, (err, stat) => {
+                assert.ifError(err);
+                assert(stat);
+                zkc.exists(path2, (err, stat) => {
+                    assert.ifError(err);
+                    assert.strictEqual(stat, null);
+                    return done();
+                });
+            });
+        });
+    });
+
+    it('remove', done => {
+        const zkc = new ZookeeperMock();
+        const topLevelPath = '/a1';
+        const path1 = `${topLevelPath}/a1`;
+        const path2 = '/a2';
+        const data1 = new Buffer('42');
+        zkc.create(path1, data1, {}, {}, err => {
+            assert.ifError(err);
+            zkc.remove(topLevelPath, err => {
+                assert(err);
+                assert.strictEqual(err.code, zookeeper.Exception.NOT_EMPTY);
+                zkc.remove(path1, (err, removed) => {
+                    assert.ifError(err);
+                    assert(removed);
+                    zkc.remove(path2, err => {
+                        assert(err);
+                        assert.strictEqual(err.code,
+                            zookeeper.Exception.NO_NODE);
+                        return done();
+                    });
+                });
+            });
+        });
+    });
+
+    it('watcher - NODE_DELETED', done => {
+        const zkc = new ZookeeperMock();
+        const topLevelPath = '/a1';
+        const path1 = `${topLevelPath}/a1`;
+        const data1 = new Buffer('42');
+        zkc.create(path1, data1, {}, {}, err => {
+            assert.ifError(err);
+            zkc.getData(path1, event => {
+                assert(event);
+                assert.strictEqual(event.type, zookeeper.Event.NODE_DELETED);
+            }, err => {
+                assert.ifError(err);
+                zkc.remove(path1, (err, removed) => {
+                    assert.ifError(err);
+                    assert(removed);
+                    return done();
+                });
+            });
+        });
     });
 });
