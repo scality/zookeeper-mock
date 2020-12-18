@@ -15,13 +15,13 @@ Examples of use:
         const data1 = 42;
         const data2 = 43;
         const data3 = 44;
-        zkc.create(path1, data1, {},
+        zkc.mkdirp(path1, data1, {},
                    zookeeper.CreateMode.PERSISTENT_SEQUENTIAL,
                    err => {
                        assert.ifError(err);
                        // simulate a race
                        process.nextTick(() => {
-                           zkc.create(path2, data2, {},
+                           zkc.mkdirp(path2, data2, {},
                           zookeeper.CreateMode.PERSISTENT_SEQUENTIAL,
                                       (err, path) => {
                                           assert.ifError(err);
@@ -33,7 +33,7 @@ Examples of use:
                                       });
                        });
                        process.nextTick(() => {
-                           zkc.create(path3, data3, {},
+                           zkc.mkdirp(path3, data3, {},
                           zookeeper.CreateMode.PERSISTENT_SEQUENTIAL,
                                       (err, path) => {
                                           assert.ifError(err);
