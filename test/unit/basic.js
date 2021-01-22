@@ -4,7 +4,10 @@ const zookeeper = require('node-zookeeper-client');
 const ZookeeperMock = require('../../lib/ZookeeperMock');
 
 describe('zookeeper mock', () => {
-    const zk = new ZookeeperMock({ doLog: false });
+    const zk = new ZookeeperMock({
+        doLog: false,
+        maxRandomDelay: 0
+    });
 
     afterEach(() => {
         zk._resetState();
@@ -424,6 +427,27 @@ describe('zookeeper mock', () => {
                     return done();
                 });
             });
+        });
+    });
+
+    it('introduces delays', done => {
+        const MAX_RANDOM_DELAY = 500;
+        const MIN_RANDOM_DELAY = 400;
+        const zk2 = new ZookeeperMock({
+            doLog: false,
+            maxRandomDelay: MAX_RANDOM_DELAY,
+            minRandomDelay: MIN_RANDOM_DELAY
+        });
+        const zkc = zk2.createClient();
+        const topLevelPath = '/a1';
+        const path1 = `${topLevelPath}/a1`;
+        const data1 = new Buffer('42');
+        const before = new Date().getTime();
+        zkc.mkdirp(path1, data1, {}, {}, err => {
+            assert.ifError(err);
+            const after = new Date().getTime();
+            assert((after - before) > MIN_RANDOM_DELAY);
+            return done();
         });
     });
 });
